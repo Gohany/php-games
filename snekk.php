@@ -270,6 +270,7 @@ class snake
     public $y_min;
     public $moveCounter = 0;
     public $score = 0;
+    public $moveTime;
     
     public $x = 2;
     public $y = 2;
@@ -280,6 +281,7 @@ class snake
     const FOOD_CHAR = 'O';
     const BACKGROUND_CHAR = ' ';
     const WAIT_FRAMES = 25000;
+    const MOVE_EVERY = 100; //ms
     
     public function __construct(){
         $this->stage = new stage;
@@ -309,7 +311,7 @@ class snake
     
     public function move()
     {
-        if ($this->moveCounter == self::WAIT_FRAMES)
+        if ((microtime(true) - $this->moveTime) * 1000 >= self::MOVE_EVERY)
         {
             $this->moveCounter = 0;
             $this->focus(1, 25);
@@ -347,9 +349,9 @@ class snake
             
             $this->grow = $this->grow == 0 ? 0 : --$this->grow;
             $this->focusHome();
-            
+            $this->moveTime = microtime(true);
         }
-        $this->moveCounter++;
+        
     }
     
     public function checkForDeath()
