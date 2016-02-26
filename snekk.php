@@ -300,10 +300,10 @@ class snake
     ];
     
     public static $movement = [
-            input::LEFT => stage::ESC . '[1D',
-            input::RIGHT => stage::ESC . '[1C',
-            input::DOWN => stage::ESC . '[1B',
-            input::UP => stage::ESC . '[1A',
+            input::LEFT => "\033[1D",
+            input::RIGHT => "\033[1C",
+            input::DOWN => "\033[1B",
+            input::UP => "\033[1A",
     ];
     
     public $tailCoords = [];
