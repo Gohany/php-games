@@ -187,10 +187,10 @@ class input
     ];
     
     public static $movement = [
-            self::LEFT => stage::ESC . '[1D',
-            self::RIGHT => stage::ESC . '[1C',
-            self::DOWN => stage::ESC . '[1B',
-            self::UP => stage::ESC . '[1A',
+            self::LEFT => "\033[1D",
+            self::RIGHT => "\033[1C",
+            self::DOWN => "\033[1B",
+            self::UP => "\033[1A",
     ];
 
     public function __construct()
