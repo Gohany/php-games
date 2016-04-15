@@ -144,5 +144,10 @@ class input
         }
         return false;
     }
+    
+    public function clear()
+    {
+        $this->command = null;
+    }
 
 }

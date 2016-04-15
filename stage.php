@@ -48,19 +48,18 @@ class stage extends game
         }
     }
     
-    public function x()
+    public function x($offset = 0)
     {
-        return $this->x + $this->xOffset;
+        return $this->x + $this->xOffset + $offset;
     }
     
-    public function y()
+    public function y($offset = 0)
     {
-        return $this->y + $this->yOffset;
+        return $this->y + $this->yOffset + $offset;
     }
     
     public function border($fill = ' ', $top = 'X', $bottom = 'X', $left = 'X', $right = 'X')
     {
-        //print stage::ESC . "[2J";
         print stage::ESC . "[" . $this->yOffset . ";" . $this->xOffset . "H";
         for ($i = 0; $i < $this->y; $i++)
         {
