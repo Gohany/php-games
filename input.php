@@ -1,11 +1,23 @@
 <?php
 
-class input
+interface IInput {
+    public function listen($commands, $max);
+    public function command();
+    public function clear();
+}
+
+class input implements IInput
 {
 
-    public $input = '';
-    public $command;
-    public static $alphabet = [
+    const LEFT = 'LEFT';
+    const RIGHT = 'RIGHT';
+    const DOWN = 'DOWN';
+    const UP = 'UP';
+    const REFRESH = 'REFRESH';
+
+    private $input = '';
+    private $command;
+    private static $alphabet = [
             0x41 => 'A',
             0x42 => 'B',
             0x43 => 'C',
@@ -62,22 +74,16 @@ class input
             0x7f => 'BACKSPACE',
             0x0a => 'ENTER',
     ];
-    
-    const LEFT = 'LEFT';
-    const RIGHT = 'RIGHT';
-    const DOWN = 'DOWN';
-    const UP = 'UP';
-    const REFRESH = 'REFRESH';
-    
-    public static $escapes = [
+
+    private static $escapes = [
             0x1b5b44 => self::LEFT,
             0x1b5b43 => self::RIGHT,
             0x1b5b42 => self::DOWN,
             0x1b5b41 => self::UP,
             0x1b5b31357e => self::REFRESH,
     ];
-    
-    public static $movement = [
+
+    private static $movement = [
             self::LEFT => "\033[1D",
             self::RIGHT => "\033[1C",
             self::DOWN => "\033[1B",
@@ -86,18 +92,15 @@ class input
 
     public function __construct()
     {
-        readline_callback_handler_install('', function()
-        {
-            
-        });
+        readline_callback_handler_install('', function() {});
     }
     
-    public function hex($input)
+    private function hex($input)
     {
         return intval(bin2hex($input), 16);
     }
-    
-    public function last($input, $number)
+
+    private function last($input, $number)
     {
         return intval(substr(bin2hex($input), $number * -1), 16);
     }
@@ -109,17 +112,14 @@ class input
         $e = NULL;
         $n = stream_select($r, $w, $e, 0);
         stream_set_timeout(STDIN, 0, 1000);
-        if ($n && in_array(STDIN, $r))
-        {
+        if ($n && in_array(STDIN, $r)) {
             
-            if (strlen(bin2hex($this->input)) > $max)
-            {
+            if (strlen(bin2hex($this->input)) > $max) {
                 $this->input = '';
             }
             $this->input .= stream_get_contents(STDIN, 1);
             
-            if (!empty($commands[$this->hex($this->input)]))
-            {
+            if (!empty($commands[$this->hex($this->input)])) {
                 $this->command = $commands[$this->hex($this->input)];
                 $this->input = '';
             }
@@ -129,8 +129,7 @@ class input
 
     public function input()
     {
-        if (!empty($this->input))
-        {
+        if (!empty($this->input)) {
             return $this->input;
         }
         return false;
@@ -138,13 +137,12 @@ class input
 
     public function command()
     {
-        if (!empty($this->command))
-        {
+        if (!empty($this->command)) {
             return $this->command;
         }
         return false;
     }
-    
+
     public function clear()
     {
         $this->command = null;

@@ -71,13 +71,20 @@ class sprite
             $stage->focus($x, $y);
             for ($i=0,$c=strlen($line);$i<$c;$i++)
             {
+				var_dump($line);
                 if ($line[$i] == ' ')
                 {
                     $stage->focus($x + $i, $y);
                 }
                 else
                 {
-                    print $line[$i];
+					foreach (str_split($line[$i]) as $letter) {
+						if ($letter == ' ') {
+							continue;
+						}
+						// we need to redraw Xs we get rid by focusing
+						print $letter;
+					}
                 }
             }
             ///print $line;
@@ -105,17 +112,6 @@ class sprite
     }
 
 }
-
-//try
-//{
-//    $sprite = new sprite('/var/games/tetris/sprites/j.php', 3, 3, 4);
-//    var_dump($sprite);
-//    exit;
-//}
-//catch (Exception $e)
-//{
-//    die($e->getMessage());
-//}
 
 class tetris extends game
 {
@@ -208,6 +204,8 @@ class tetris extends game
         try
         {
 
+            $directory = getcwd();
+            
             if (empty($this->activeShape) && empty($this->nextShape))
             {
                 $this->activeShape = self::$shapes[rand(0, 6)];
@@ -217,14 +215,14 @@ class tetris extends game
                 $this->activeShape = $this->nextShape;
             }
 
-            $this->activeSprite = new sprite('/var/games/tetris/sprites/' . $this->activeShape['file'] . '.php', $this->activeShape['width'], $this->activeShape['height'], $this->activeShape['frames']);
+            $this->activeSprite = new sprite($directory . '/tetris/sprites/' . $this->activeShape['file'] . '.php', $this->activeShape['width'], $this->activeShape['height'], $this->activeShape['frames']);
 
             $this->x = round($this->blockStage->x / 2) - $this->activeSprite->width;
             $this->y = 2;
             $this->blockStage->focus($this->x, $this->y);
 
             $this->nextShape = self::$shapes[rand(0, 6)];
-            $this->nextSprite = new sprite('/var/games/tetris/sprites/' . $this->nextShape['file'] . '.php', $this->nextShape['width'], $this->nextShape['height'], $this->nextShape['frames']);
+            $this->nextSprite = new sprite($directory . '/tetris/sprites/' . $this->nextShape['file'] . '.php', $this->nextShape['width'], $this->nextShape['height'], $this->nextShape['frames']);
         }
         catch (Exception $e)
         {
@@ -271,7 +269,7 @@ class tetris extends game
 
     public function shapeCollision()
     {
-        if ($this->y == $this->blockStage->y - $this->activeSprite->drawnHeight())
+        if ($this->y == ($this->blockStage->y - Stage::STAGE_BORDER_THICKNESS) - $this->activeSprite->drawnHeight())
         {
             $this->activeSprite->drawnHeight();
             return true;
@@ -284,7 +282,7 @@ class tetris extends game
         $this->x = round($this->blockStage->x / 2) - $this->activeSprite->width;
         $this->y = 2;
         $this->nextShape = self::$shapes[rand(0, 6)];
-        $this->nextSprite = new sprite('/var/games/tetris/sprites/' . $this->nextShape['file'] . '.php', $this->nextShape['width'], $this->nextShape['height'], $this->nextShape['frames']);
+        $this->nextSprite = new sprite(getcwd() . '/tetris/sprites/' . $this->nextShape['file'] . '.php', $this->nextShape['width'], $this->nextShape['height'], $this->nextShape['frames']);
     }
 
     public function run()
@@ -308,14 +306,17 @@ class tetris extends game
 //            {
 //                die ("It's over!");
 //            }
-
-            $this->shapeMove();
-
+			
+			
             if ($this->shapeCollision())
             {
                 $this->stickShape();
 //                $this->clearLines();
-            }
+            } else {
+				$this->shapeMove();
+			}
+			
+			
 
 //            if (!$this->activeShape)
 //            {
