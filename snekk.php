@@ -32,9 +32,9 @@ function sig_handler($signor)
     }
 }
 
-pcntl_signal(SIGTERM, "sig_handler");
-pcntl_signal(SIGHUP,  "sig_handler");
-pcntl_signal(SIGUSR1, "sig_handler");
+#pcntl_signal(SIGTERM, "sig_handler");
+#pcntl_signal(SIGHUP,  "sig_handler");
+#pcntl_signal(SIGUSR1, "sig_handler");
 
 interface ISnake {
     /**
